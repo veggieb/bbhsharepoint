@@ -1,0 +1,17 @@
+.button,
+.button:visited,
+.button:active {
+    display: inline-block;
+    padding: 15px 30px;
+    margin: 10px;
+    font-size: 18px;
+    background-color: #e50000; /* Red color */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.button:hover {
+    background-color: #c20000; /* Darker red on hover */
+}
