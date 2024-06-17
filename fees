@@ -49,6 +49,10 @@ import pandas as pd
 # assuming the data is in a csv file named 'travel.csv' with the first row as column names
 df = pd.read_csv('travel.csv')
 
+# Convert Travel Type and Transaction to string
+df['Travel Type'] = df['Travel Type'].astype('str')
+df['Transaction'] = df['Transaction'].astype('str')
+
 # create a new column with tuples of Travel Type and Transaction
 df['combination'] = df[['Travel Type', 'Transaction']].apply(lambda row: (row[0], row[1]), axis=1)
 
@@ -60,3 +64,4 @@ result_df = df_grouped.groupby('Book Country').agg(list).reset_index(name='List 
 result_df['count'] = result_df['List of Tuples'].apply(lambda x: len(x))
 
 print(result_df)
+
