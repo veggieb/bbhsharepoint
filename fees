@@ -39,6 +39,24 @@ grouped_df = grouped_df.rename_axis(None, axis=1)  # remove the index name
 # convert each item in each list to tuple and rename column
 result = grouped_df['counts'].apply(lambda x: tuple(x)).reset_index(name='combinations')
 
+
+import pandas as pd
+
+# assuming the data is in a csv file named 'travel.csv' with the first row as column names
+df = pd.read_csv('travel.csv')
+
+# create a new column with tuples of Travel Type and Transaction
+df['combination'] = df[['Travel Type', 'Transaction']].apply(lambda row: (row[0], row[1]), axis=1)
+
+# group by PNR and create sorted list of tuples
+df_grouped = df.groupby('PNR').agg(lambda x: sorted(x)).reset_index()
+
+# group by Book Country and count occurrences of each list of tuples
+result_df = df_grouped.groupby('Book Country').agg(list).reset_index(name='List of Tuples')
+result_df['count'] = result_df['List of Tuples'].apply(lambda x: len(x))
+
+print(result_df)
+
 # add counts column by getting the length of each tuple in combinations column
 result['count'] = result['combinations'].apply(lambda x: len(x))
 
