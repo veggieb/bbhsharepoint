@@ -39,6 +39,10 @@ grouped_df = grouped_df.rename_axis(None, axis=1)  # remove the index name
 # convert each item in each list to tuple and rename column
 result = grouped_df['counts'].apply(lambda x: tuple(x)).reset_index(name='combinations')
 
+# add counts column by getting the length of each tuple in combinations column
+result['count'] = result['combinations'].apply(lambda x: len(x))
+
+print(result)
 
 import pandas as pd
 
@@ -56,8 +60,3 @@ result_df = df_grouped.groupby('Book Country').agg(list).reset_index(name='List 
 result_df['count'] = result_df['List of Tuples'].apply(lambda x: len(x))
 
 print(result_df)
-
-# add counts column by getting the length of each tuple in combinations column
-result['count'] = result['combinations'].apply(lambda x: len(x))
-
-print(result)
