@@ -9,7 +9,14 @@ df['Type_Transaction'] = df['Travel Type'].str.upper() + '_' + df['Transaction']
 # group by PNR, Type_Transaction and Book Country, count occurrences, then group by Book Country
 grouped = df.groupby(['PNR', 'Type_Transaction', 'Book Country']).size().groupby('Book Country').agg(list)
 
-# convert each item in each list to tuple and reset index
-result = grouped.applymap(lambda x: tuple(x)).reset_index(name='counts')
+# transform the grouped Series object into a DataFrame
+grouped_df = grouped.reset_index(name='counts')
+grouped_df = grouped_df.rename_axis(None, axis=1)  # remove the index name
+
+# convert each item in each list to tuple
+result = grouped_df['counts'].apply(lambda x: [tuple(x)]).explode().reset_index(name='combinations')
+
+# add counts column by getting the length of each tuple in combinations column
+result['count'] = result['combinations'].apply(lambda x: len(x))
 
 print(result)
