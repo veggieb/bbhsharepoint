@@ -1,0 +1,15 @@
+import pandas as pd
+
+# assuming the data is in a csv file named 'travel.csv' with the first row as column names
+df = pd.read_csv('travel.csv')
+
+# create combined column
+df['Type_Transaction'] = df['Travel Type'].str.upper() + '_' + df['Transaction'].str.upper()
+
+# group by PNR, Type_Transaction and Book Country, count occurrences, then group by Book Country
+grouped = df.groupby(['PNR', 'Type_Transaction', 'Book Country']).size().groupby('Book Country').agg(list)
+
+# convert each item in each list to tuple and reset index
+result = grouped.applymap(lambda x: tuple(x)).reset_index(name='counts')
+
+print(result)
