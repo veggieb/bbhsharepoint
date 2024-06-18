@@ -1,0 +1,24 @@
+import pandas as pd
+from collections import Counter
+
+# Sample data creation, replace this with reading your actual data
+data = {
+    "Travel Type": ["AIR", "AIR", "AIR", "HOTEL", "CAR", "CAR"],
+    "PNR": ["123", "123", "123", "123", "124", "124"],
+    "Transaction": ["TICKET", "EXCHANGE", "REFUND", "INVOICE", "RENTAL", "RETURN"],
+    "Book Country": ["USA", "USA", "USA", "USA", "CAN", "CAN"]
+}
+
+df = pd.DataFrame(data)
+
+# Step 2: Group by PNR and create the list of tuples
+df_grouped = df.groupby('PNR').apply(lambda x: sorted(list(zip(x['Travel Type'], x['Transaction'])), key=lambda y: (y[0], y[1]))).reset_index(name='List of Tuples')
+
+# Step 3: Add Book Country to the grouped DataFrame
+df_grouped = df_grouped.merge(df[['PNR', 'Book Country']].drop_duplicates(), on='PNR', how='left')
+
+# Step 4: Group by Book Country and the list of tuples, then count occurrences
+result = df_grouped.groupby(['Book Country', 'List of Tuples']).size().reset_index(name='Count')
+
+# Display the final DataFrame
+print(result)
