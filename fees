@@ -12,7 +12,9 @@ data = {
 df = pd.DataFrame(data)
 
 # Step 2: Group by PNR and create the list of tuples
-df_grouped = df.groupby('PNR').apply(lambda x: sorted(list(zip(x['Travel Type'], x['Transaction'])), key=lambda y: (y[0], y[1]))).reset_index(name='List of Tuples')
+df_grouped = df.groupby('PNR').apply(
+    lambda x: tuple(sorted(list(zip(x['Travel Type'], x['Transaction'])), key=lambda y: (y[0], y[1])))
+).reset_index(name='List of Tuples')
 
 # Step 3: Add Book Country to the grouped DataFrame
 df_grouped = df_grouped.merge(df[['PNR', 'Book Country']].drop_duplicates(), on='PNR', how='left')
